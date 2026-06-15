@@ -3,6 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<script>
+(function(){
+  var k = sessionStorage.getItem('nhr_auth');
+  if(k === 'STB') return;
+  document.addEventListener('DOMContentLoaded', function(){
+    var overlay = document.createElement('div');
+    overlay.id = 'auth-overlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:#1d2813;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:16px';
+    overlay.innerHTML = '<div style="color:#fbf7f2;font-size:11px;letter-spacing:2px;opacity:.5;text-transform:uppercase;margin-bottom:4px">NHR OKR Control Tower</div>'
+      + '<div style="color:#fbf7f2;font-size:18px;font-weight:600">Skriv inn passord</div>'
+      + '<input id="auth-input" type="password" placeholder="Passord" style="padding:10px 16px;font-size:14px;border:none;border-radius:4px;width:220px;outline:none;text-align:center">'
+      + '<div id="auth-err" style="color:#e07020;font-size:12px;min-height:16px"></div>'
+      + '<button onclick="checkPw()" style="background:#b23520;color:#fff;border:none;padding:10px 28px;border-radius:4px;font-size:13px;cursor:pointer;font-weight:600">Logg inn</button>';
+    document.body.appendChild(overlay);
+    document.getElementById('auth-input').addEventListener('keydown', function(e){ if(e.key==='Enter') checkPw(); });
+    document.getElementById('auth-input').focus();
+  });
+  window.checkPw = function(){
+    var v = document.getElementById('auth-input').value;
+    if(v === 'STB'){
+      sessionStorage.setItem('nhr_auth','STB');
+      document.getElementById('auth-overlay').remove();
+    } else {
+      document.getElementById('auth-err').textContent = 'Feil passord. Prøv igjen.';
+      document.getElementById('auth-input').value = '';
+      document.getElementById('auth-input').focus();
+    }
+  };
+})();
+</script>
 <title>NHR OKR Control Tower</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
